@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة سلم وثعبان</title>
+    <style>
+        /* إضافة بعض التنسيقات الأساسية */
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .board { display: grid; grid-template-columns: repeat(10, 50px); grid-template-rows: repeat(10, 50px); }
+        .cell { border: 1px solid #000; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <h1>لعبة سلم وثعبان</h1>
+    <div class="board" id="board"></div>
+    <button onclick="rollDice()">ارمِ النرد</button>
+    <p id="message"></p>
+
+    <script>
+        const board = document.getElementById('board');
+        const message = document.getElementById('message');
+        let playerPosition = 0;
+
+        // إنشاء اللوحة
+        for (let i = 100; i >= 1; i--) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.innerText = i;
+            board.appendChild(cell);
+        }
+
+        function rollDice() {
+            const dice = Math.floor(Math.random() * 6) + 1;
+            message.innerText = `رميت ${dice}`;
+            playerPosition += dice;
+
+            // القفز للسلم أو الثعبان
+            if (playerPosition === 3) playerPosition = 22; // سلم
+            else if (playerPosition === 5) playerPosition = 8; // سلم
+            else if (playerPosition === 11) playerPosition = 26; // سلم
+            else if (playerPosition === 20) playerPosition = 29; // سلم
+            else if (playerPosition === 27) playerPosition = 1; // ثعبان
+            else if (playerPosition > 100) playerPosition = 100; // التحقق من عدم تخطي النهاية
+
+            // تحديث اللوحة
+            updateBoard();
+        }
+
+        function updateBoard() {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => cell.style.backgroundColor = '');
+            if (playerPosition > 0) {
+                cells[100 - playerPosition].style.backgroundColor = 'yellow'; // موقع اللاعب
+            }
+            if (playerPosition === 100) {
+                message.innerText = 'تهانينا! أنت الفائز!';
+            }
+        }
+    </script>
+</body>
+</html>
